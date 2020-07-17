@@ -1,0 +1,7 @@
+.upload-container {
+  border: 1px solid;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: start;
+  padding: 5px;
+}
