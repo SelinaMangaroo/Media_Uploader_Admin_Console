@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../App.css";
+import "./Upload.css";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Button from "react-bootstrap/Button";
 
@@ -49,7 +49,7 @@ class Upload extends Component {
           )}
 
           {this.props.data.status === "in progress" ? (
-            <ProgressBar now={60} label={`${60}%`} />
+            <ProgressBar now={50} label={`${50}%`} />
           ) : (
             ""
           )}

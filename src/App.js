@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import "./App.css";
 import data from "./data";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Tabs, Tab } from "react-bootstrap";
-import Recent from "./RecentTab/Recent";
-import Search from "./SearchTab/Search";
+import Recent from "./components/RecentTab/Recent";
+import Search from "./components/SearchTab/Search";
 
 class App extends Component {
   constructor(props) {
