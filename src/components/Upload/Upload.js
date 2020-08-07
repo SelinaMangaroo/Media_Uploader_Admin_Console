@@ -6,31 +6,80 @@ import Button from "react-bootstrap/Button";
 class Upload extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      status: this.props.data.status,
-    };
+    this.state = {};
   }
 
   render() {
-    console.log(this.state.status);
+    const fileObj = this.props.data.files;
+
+    const totalSizes = [];
+    const progress = [];
+    const completed = [];
+
+    for (const [key, value] of Object.entries(this.props.data.files)) {
+      totalSizes.push(value.totalSizeInBytes);
+      progress.push(value.progressInBytes);
+      completed.push(value.complete);
+      // console.log(
+      //   ` Key => ${key} : Values => Complete: ${value.complete}, Total Size: ${value.totalSizeInBytes}, Progress: ${value.progressInBytes}`
+      // );
+    }
+    // console.log("TotalSizes Array: " + totalSizes);
+    // console.log("Progress Array: " + progress);
+    // console.log("Completed Array: " + completed);
+
+    let incompleteFiles = completed.includes(false);
+    console.log(
+      "Does this upload contain incomplete files? : " + incompleteFiles
+    );
+
+    let progressBar = null;
+    const arrSum = (arr) => arr.reduce((a, b) => a + b, 0);
+    let progressSum = arrSum(progress) / 1000;
+    // console.log("progress Sum: " + progressSum);
+    let progressPecentage =
+      (progressSum / (this.props.data.total_bytes / 1000)) * 100;
+    if (incompleteFiles) {
+      progressBar = (
+        <div>
+          <ProgressBar
+            now={progressPecentage}
+            label={`${Math.ceil(progressPecentage)}%`}
+          />
+        </div>
+      );
+    }
+
     return (
-      <div key={this.props.data.id}>
+      <div key={this.props.data.session_key}>
         <div className="upload-container">
           <div className="container">
-            <div className="row">
-              <div class="col-sm-2">
-                <h6>{this.props.data.files.length} files</h6>
-              </div>
-              <div class="col-sm-2">
-                <h6>User: {this.props.data.user}</h6>
-              </div>
-              <div class="col-sm-2">
-                <h6>Status: {this.state.status}</h6>
+            <div className="row" style={{ justifyContent: "space-between" }}>
+              <div className="col-sm-3" id="box-container">
+                <h6>
+                  {this.props.data.num_files} files (
+                  {Math.ceil(this.props.data.total_bytes / 1000)}) kb
+                </h6>
               </div>
 
-              <div class="col-sm-2">
-                {this.props.data.status === "in progress" ? (
-                  <Button variant="danger" style={{ marginBottom: "5px" }}>
+              <div className="col-sm-3" id="box-container">
+                <h6>User: {this.props.data.user.user_name}</h6>
+              </div>
+
+              <div
+                className="col-sm-3"
+                id="box-container"
+                style={{ borderRadius: "25px" }}
+              >
+                <h6>Status: {this.props.data.status}</h6>
+              </div>
+
+              <div className="col-sm-2">
+                {this.props.data.status != "COMPLETED" ? (
+                  <Button
+                    variant="danger"
+                    style={{ marginBottom: "5px", marginTop: "6px" }}
+                  >
                     X
                   </Button>
                 ) : (
@@ -40,25 +89,34 @@ class Upload extends Component {
             </div>
           </div>
 
-          <h6>Started on: {this.props.data.started_date}</h6>
+          <div className="filename-container">
+            <h6>
+              {this.props.data.num_files === "1" ||
+              this.props.data.num_files === "2" ||
+              this.props.data.num_files === "3"
+                ? "Files: " + Object.keys(fileObj)[0]
+                : "Files: " +
+                  Object.keys(fileObj)[0] +
+                  ", " +
+                  Object.keys(fileObj)[1] +
+                  ", " +
+                  Object.keys(fileObj)[2] +
+                  " and " +
+                  (this.props.data.num_files - 3) +
+                  " more"}
+            </h6>
+          </div>
 
-          {this.state.status === "completed" ? (
-            <h6>Completed On: {this.props.data.completed_date}</h6>
-          ) : (
-            ""
-          )}
+          <div className="date-container">
+            <h6>Started on: {this.props.data.created_on}</h6>
+            {this.props.data.status === "COMPLETED" ? (
+              <h6>Completed On: {this.props.data.completed_on}</h6>
+            ) : (
+              ""
+            )}
+          </div>
 
-          {this.props.data.status === "in progress" ? (
-            <ProgressBar now={50} label={`${50}%`} />
-          ) : (
-            ""
-          )}
-
-          <h6>
-            Files: {this.props.data.files[0]}, {this.props.data.files[1]},{" "}
-            {this.props.data.files[2]} and {this.props.data.files.length - 3}{" "}
-            more
-          </h6>
+          {progressBar}
         </div>
       </div>
     );

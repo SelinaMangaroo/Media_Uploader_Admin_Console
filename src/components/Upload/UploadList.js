@@ -9,7 +9,7 @@ class UploadList extends Component {
     return (
       <div>
         {this.props.data.map((upload) => {
-          return <Upload data={upload} key={upload.id} />;
+          return <Upload data={upload} key={upload.session_id} />;
         })}
       </div>
     );
